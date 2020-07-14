@@ -37,6 +37,7 @@ win32:CONFIG += \
 
 SOURCES += \
     collector.cpp \
+    file.cpp \
     framedata.cpp \
     header.cpp \
     main.cpp \
@@ -44,18 +45,17 @@ SOURCES += \
     mapobject.cpp \
     pedestrian.cpp \
     pole.cpp \
-    polearray.cpp \
     vehicle.cpp
 
 HEADERS += \
     Simulator.h \
     collector.h \
+    file.h \
     framedata.h \
     header.h \
     mapobject.h \
     pedestrian.h \
     pole.h \
-    polearray.h \
     vehicle.h
 
 #-------------------------------------------------------------------------------

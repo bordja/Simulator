@@ -1,4 +1,5 @@
 #include "framedata.h"
+#include "collector.h"
 #include <QDebug>
 FrameData::FrameData()
 {
@@ -17,32 +18,32 @@ void FrameData::setVehicleNum(quint16 numVehicle){
     this->numVehicle = numVehicle;
 }
 
-void FrameData::setPedestrianRel(quint16 *pedestrianRel){
-    for(int i = 0; i < MAX_PEDESTRIAN; i++){
-        this->pedestrianRel[i] = pedestrianRel[i];
-    }
-}
-
-void FrameData::setVehicleRel(quint16 *vehicleRel){
-    for(int i = 0; i < MAX_VEHICLE; i++){
-        this->vehicleRel[i] = vehicleRel[i];
-    }
-}
-
 void FrameData::printFrameData(){
     qDebug()<<"-------- FRAME"<<this->getCurrentFrameNum()<<"---------";
     qDebug()<<"Timestamp:\t\t"<<this->timestamp;
     qDebug()<<"Pedestrian number:\t"<<this->numPedestrian;
-    /*for(int i = 0 ; i < MAX_PEDESTRIAN; i++){
-        qDebug()<<"X"<<i<<":"<<pedestrianRel[i*2];
-        qDebug()<<"Y"<<i<<":"<<pedestrianRel[i*2 + 1];
-    }*/
     qDebug()<<"Veicle number:\t"<<this->numVehicle;
-    /*for(int i = 0 ; i < MAX_VEHICLE; i++){
-        qDebug()<<"X"<<i<<":"<<vehicleRel[i*2];
-        qDebug()<<"Y"<<i<<":"<<vehicleRel[i*2 + 1];
-    }*/
     qDebug()<<"-------------------------------";
+}
+
+quint16 FrameData::getNumPedestrian() const
+{
+    return numPedestrian;
+}
+
+quint16 FrameData::getNumVehicle() const
+{
+    return numVehicle;
+}
+
+void FrameData::appendVehicle(Vehicle* v)
+{
+    this->vehicles.append(v);
+}
+
+void FrameData::appendPedestrian(Pedestrian *p)
+{
+    this->pedestrians.append(p);
 }
 
 void FrameData::incrementCurrentFrame(){

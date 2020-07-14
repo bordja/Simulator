@@ -26,16 +26,19 @@ class Graphic;
 }
 
 #include <QMainWindow>
-
+#include "file.h"
 class Simulator : public QMainWindow
 {
     Q_OBJECT
 public:
     explicit Simulator(QWidget* parent = nullptr);
     ~Simulator() override;
-    void updateStaticGraphic(Esri::ArcGISRuntime::Graphic** array,int size);
+    void updateStaticGraphic();
 public slots:
-
+    void updateDynamicGraphic(File* f);
+signals:
+    void graphicUpdated(int id);
+    void appStarting();
 private:
     Esri::ArcGISRuntime::Map*                   m_map = nullptr;
     Esri::ArcGISRuntime::MapGraphicsView*       m_mapView = nullptr;

@@ -1,27 +1,28 @@
 #ifndef COLLECTOR_H
 #define COLLECTOR_H
 
-#include <QFile>
 #include <QtGlobal>
-
+#include "file.h"
+#include "Simulator.h"
 #define FILE_NUM 4
-#define HEADER_SIZE 33
+
 class Collector : public QObject
 {
     Q_OBJECT
 public:
-    Collector();
+    Collector(Simulator&);
     ~Collector();
 
     void readFileHeader(int fileID);
+    File* getFile(int id);
+    void start();
 private:
-    QFile* inFiles[FILE_NUM];
-
+    File files[FILE_NUM];
 signals:
-    void frameRead(int);
+    void finished();
 public slots:
     void readDataFromFile(int fileID);
-
+    void readData();
 };
 
 #endif // COLLECTOR_H

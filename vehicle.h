@@ -9,6 +9,11 @@ class Vehicle : public MapObject
 public:
     Vehicle();
     Vehicle(double y, double x, int id);
+    SimpleMarkerSymbol *getPoint_symbol() const;
+    void setPoint_symbol(SimpleMarkerSymbol *value);
+
+private:
+    SimpleMarkerSymbol* point_symbol;
 };
 
 #endif // VEHICLE_H

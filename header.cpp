@@ -1,76 +1,145 @@
 #include "header.h"
 #include <QDebug>
+
 Header::Header()
 {
 
 }
-void Header::setCam_ID(qint8 cam_ID){
-    this->cam_ID = cam_ID;
-}
 
-void Header::setPole1_ID(qint32 pole1_ID){
-    this->pole1_ID = pole1_ID;
-}
+void Header::calculateParameters(quint32 pole0_ID, quint32 poleDx_ID, quint32 poleDy_ID, quint16 pole0_rel_x, quint16 pole0_rel_y, quint16 poleDx_rel_x, quint16 poleDx_rel_y, quint16 poleDy_rel_x, quint16 poleDy_rel_y)
+{
+    this->setOx(pole0_rel_x);
+    this->setOy(1080 - pole0_rel_y);
+    this->setOx_abs(this->getPoleFromId(pole0_ID).y());
+    this->setOy_abs(this->getPoleFromId(pole0_ID).x());
 
-void Header::setPole2_ID(qint32 pole2_ID){
-    this->pole2_ID = pole2_ID;
-}
+    quint16 Ax = poleDx_rel_x;
+    quint16 Ay = 1080 - poleDx_rel_y;
+    double Ax_abs = this->getPoleFromId(poleDx_ID).y();
+    double Ay_abs = this->getPoleFromId(poleDx_ID).x();
 
-void Header::setPole3_ID(qint32 pole3_ID){
-    this->pole3_ID = pole3_ID;
-}
 
-void Header::setPole4_ID(qint32 pole4_ID){
-    this->pole4_ID = pole4_ID;
-}
+    quint16 delta_x = Ax - this->Ox;
 
-void Header::setPole1_rel_X(qint16 pole1_rel_x){
-    this->pole1_rel_x = pole1_rel_x;
-}
+    quint16 Bx = poleDy_rel_x;
+    quint16 By = 1080 - poleDy_rel_y;
+    double Bx_abs = this->getPoleFromId(poleDy_ID).y();
+    double By_abs = this->getPoleFromId(poleDy_ID).x();
 
-void Header::setPole1_rel_Y(qint16 pole1_rel_y){
-    this->pole1_rel_y = pole1_rel_y;
-}
 
-void Header::setPole2_rel_X(qint16 pole2_rel_x){
-    this->pole2_rel_x = pole2_rel_x;
-}
+    quint16 delta_y = By - this->Oy;
 
-void Header::setPole2_rel_Y(qint16 pole2_rel_y){
-    this->pole2_rel_y = pole2_rel_y;
-}
+    this->setPx_x((Ax_abs - Ox_abs)/delta_x);
+    this->setPx_y((Ay_abs - Oy_abs)/delta_x);
+    this->setPy_x((Bx_abs - Ox_abs)/delta_y);
+    this->setPy_y((By_abs - Oy_abs)/delta_y);
 
-void Header::setPole3_rel_X(qint16 pole3_rel_x){
-    this->pole3_rel_x = pole3_rel_x;
-}
-
-void Header::setPole3_rel_Y(qint16 pole3_rel_y){
-    this->pole3_rel_y = pole3_rel_y;
-}
-
-void Header::setPole4_rel_X(qint16 pole4_rel_x){
-    this->pole4_rel_x = pole4_rel_x;
-}
-
-void Header::setPole4_rel_Y(qint16 pole4_rel_y){
-    this->pole4_rel_y = pole4_rel_y;
 }
 
 void Header::printHeader(){
     qDebug()<<"--------HEADER---------";
     qDebug()<<"CAM ID\t"<<this->cam_ID;
-    qDebug()<<"POLE 1 ID\t"<<this->pole1_ID;
-    qDebug()<<"\t"<<this->pole1_rel_x;
-    qDebug()<<"\t"<<this->pole1_rel_y;
-    qDebug()<<"POLE 2 ID\t"<<this->pole2_ID;
-    qDebug()<<"\t"<<this->pole2_rel_x;
-    qDebug()<<"\t"<<this->pole2_rel_y;
-    qDebug()<<"POLE 3 ID\t"<<this->pole3_ID;
-    qDebug()<<"\t"<<this->pole3_rel_x;
-    qDebug()<<"\t"<<this->pole3_rel_y;
-    qDebug()<<"POLE 4 ID\t"<<this->pole4_ID;
-    qDebug()<<"\t"<<this->pole4_rel_x;
-    qDebug()<<"\t"<<this->pole4_rel_y;
     qDebug()<<"------------------------";
 
+}
+
+quint16 Header::getOx() const
+{
+    return Ox;
+}
+
+void Header::setOx(const quint16 &value)
+{
+    Ox = value;
+}
+
+quint16 Header::getOy() const
+{
+    return Oy;
+}
+
+void Header::setOy(const quint16 &value)
+{
+    Oy = value;
+}
+
+double Header::getPx_x() const
+{
+    return px_x;
+}
+
+void Header::setPx_x(double value)
+{
+    px_x = value;
+}
+
+double Header::getPx_y() const
+{
+    return px_y;
+}
+
+void Header::setPx_y(double value)
+{
+    px_y = value;
+}
+
+double Header::getPy_x() const
+{
+    return py_x;
+}
+
+void Header::setPy_x(double value)
+{
+    py_x = value;
+}
+
+double Header::getPy_y() const
+{
+    return py_y;
+}
+
+void Header::setPy_y(double value)
+{
+    py_y = value;
+}
+
+quint8 Header::getCam_ID() const
+{
+    return cam_ID;
+}
+
+void Header::setCam_ID(const quint8 &value)
+{
+    cam_ID = value;
+}
+
+double Header::getOx_abs() const
+{
+    return Ox_abs;
+}
+
+void Header::setOx_abs(double value)
+{
+    Ox_abs = value;
+}
+
+double Header::getOy_abs() const
+{
+    return Oy_abs;
+}
+
+void Header::setOy_abs(double value)
+{
+    Oy_abs = value;
+}
+
+Point Header::getPoleFromId(int id)
+{
+    QList<Pole*>::const_iterator it = poles.begin();
+
+    for(;it!=poles.end();++it){
+        if((*it)->getId() == id){
+            return (*it)->getLocation();
+        }
+    }
 }
