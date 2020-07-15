@@ -8,7 +8,7 @@ class Pole : public MapObject
 {
 public:
     Pole();
-    Pole(double y,double x, int id);
+    Pole(double x,double y, int id);
     //Pole(Pole& p);
     SimpleMarkerSymbol *getPoint_symbol() const;
     void setPoint_symbol(SimpleMarkerSymbol *value);

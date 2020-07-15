@@ -6,9 +6,9 @@ Pole::Pole(){
     this->id = -1;
     this->point_symbol = new SimpleMarkerSymbol(SimpleMarkerSymbolStyle::Diamond, QColor(Qt::yellow), 10, this);
 }
-Pole::Pole(double y, double x, int id)
+Pole::Pole(double x, double y, int id)
 {
-    this->location = Point(y,x,SpatialReference::wgs84());
+    this->location = Point(x,y,SpatialReference::wgs84());
     this->id = id;
     this->point_symbol = new SimpleMarkerSymbol(SimpleMarkerSymbolStyle::Diamond, QColor(Qt::yellow), 10, this);
     this->setGraphicPoint(this->point_symbol);

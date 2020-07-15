@@ -10,21 +10,23 @@ void Header::calculateParameters(quint32 pole0_ID, quint32 poleDx_ID, quint32 po
 {
     this->setOx(pole0_rel_x);
     this->setOy(1080 - pole0_rel_y);
-    this->setOx_abs(this->getPoleFromId(pole0_ID).y());
-    this->setOy_abs(this->getPoleFromId(pole0_ID).x());
-
+    this->setOx_abs(this->getPoleFromId(pole0_ID).x());
+    this->setOy_abs(this->getPoleFromId(pole0_ID).y());
+    qDebug()<<"Pole0_ID\t"<<pole0_ID;
+    qDebug()<<"PoleDx_ID\t"<<poleDx_ID;
+    qDebug()<<"PoleDy_ID\t"<<poleDy_ID;
     quint16 Ax = poleDx_rel_x;
     quint16 Ay = 1080 - poleDx_rel_y;
-    double Ax_abs = this->getPoleFromId(poleDx_ID).y();
-    double Ay_abs = this->getPoleFromId(poleDx_ID).x();
+    double Ax_abs = this->getPoleFromId(poleDx_ID).x();
+    double Ay_abs = this->getPoleFromId(poleDx_ID).y();
 
 
     quint16 delta_x = Ax - this->Ox;
 
     quint16 Bx = poleDy_rel_x;
     quint16 By = 1080 - poleDy_rel_y;
-    double Bx_abs = this->getPoleFromId(poleDy_ID).y();
-    double By_abs = this->getPoleFromId(poleDy_ID).x();
+    double Bx_abs = this->getPoleFromId(poleDy_ID).x();
+    double By_abs = this->getPoleFromId(poleDy_ID).y();
 
 
     quint16 delta_y = By - this->Oy;
@@ -39,6 +41,10 @@ void Header::calculateParameters(quint32 pole0_ID, quint32 poleDx_ID, quint32 po
 void Header::printHeader(){
     qDebug()<<"--------HEADER---------";
     qDebug()<<"CAM ID\t"<<this->cam_ID;
+    qDebug()<<"Px_x\t"<<this->getPx_x();
+    qDebug()<<"Px_y\t"<<this->getPx_y();
+    qDebug()<<"Py_x\t"<<this->getPy_x();
+    qDebug()<<"Py_y\t"<<this->getPy_y();
     qDebug()<<"------------------------";
 
 }

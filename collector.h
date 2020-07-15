@@ -22,7 +22,6 @@ signals:
     void finished();
 public slots:
     void readDataFromFile(int fileID);
-    void readData();
 };
 
 #endif // COLLECTOR_H

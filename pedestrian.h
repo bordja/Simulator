@@ -7,7 +7,7 @@ class Pedestrian : public MapObject
 {
 public:
     Pedestrian();
-    Pedestrian(double y, double x, int id);
+    Pedestrian(double x, double y, int id);
     SimpleMarkerSymbol *getPoint_symbol() const;
     void setPoint_symbol(SimpleMarkerSymbol *value);
 

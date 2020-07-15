@@ -7,8 +7,8 @@ Vehicle::Vehicle()
     this->point_symbol = new SimpleMarkerSymbol(SimpleMarkerSymbolStyle::Circle, QColor(Qt::green), 7, this);
 }
 
-Vehicle::Vehicle(double y, double x, int id){
-    this->location = Point(y,x,SpatialReference::wgs84());
+Vehicle::Vehicle(double x, double y, int id){
+    this->location = Point(x,y,SpatialReference::wgs84());
     this->id = id;
     this->point_symbol = new SimpleMarkerSymbol(SimpleMarkerSymbolStyle::Circle, QColor(Qt::green), 7, this);
     this->setGraphicPoint(this->point_symbol);

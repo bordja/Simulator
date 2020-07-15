@@ -7,8 +7,8 @@ Pedestrian::Pedestrian()
     this->point_symbol = new SimpleMarkerSymbol(SimpleMarkerSymbolStyle::Circle, QColor(Qt::red), 7, this);
 }
 
-Pedestrian::Pedestrian(double y, double x, int id){
-    this->location = Point(y,x, SpatialReference::wgs84());
+Pedestrian::Pedestrian(double x, double y, int id){
+    this->location = Point(x,y, SpatialReference::wgs84());
     this->id = id;
     this->point_symbol = new SimpleMarkerSymbol(SimpleMarkerSymbolStyle::Circle, QColor(Qt::red), 7, this);
     this->setGraphicPoint(this->point_symbol);
