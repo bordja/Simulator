@@ -17,12 +17,14 @@ public:
     QFile* getFileDescriptor();
     int getId();
     void calculateCoordinates(quint16* pedestrianCoors, int pedestrianNum, quint16* vehicleCoords, int vehicleNum);
-signals:
-    void dataReady(File* f);
+    bool getActive() const;
+    void setActive(bool value);
+
 private:
     QFile* fileDescriptor;
     Header header;
     FrameData data;
+    bool active;
     int id;
 };
 

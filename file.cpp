@@ -76,5 +76,14 @@ void File::calculateCoordinates(quint16 *pedestrianCoors, int pedestrianNum, qui
         Vehicle* v = new Vehicle(xAbs_temp,yAbs_temp,i);
         this->getFrameData().appendVehicle(v);
     }
-    emit dataReady(this);
+}
+
+bool File::getActive() const
+{
+    return active;
+}
+
+void File::setActive(bool value)
+{
+    active = value;
 }

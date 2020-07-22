@@ -16,12 +16,18 @@ public:
     void readFileHeader(int fileID);
     File* getFile(int id);
     void start();
+    void initTimestamps();
+    void readDataFromFile(int fileID);
+    void updateActiveFiles();
+    void updateCurrentTime();
+    void printActive();
 private:
-    File files[FILE_NUM];
+    File* files[FILE_NUM];
 signals:
     void finished();
+    void dataReady(File** f);
 public slots:
-    void readDataFromFile(int fileID);
+    void readFiles();
 };
 
 #endif // COLLECTOR_H

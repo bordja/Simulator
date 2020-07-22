@@ -21,6 +21,7 @@
 #include "MapGraphicsView.h"
 #include "pole.h"
 #include <QTimer>
+#include "collector.h"
 using namespace Esri::ArcGISRuntime;
 
 Simulator::Simulator(QWidget* parent /*=nullptr*/):
@@ -59,20 +60,25 @@ void Simulator::updateStaticGraphic(){
     //m_mapView->graphicsOverlays()->append(staticOverlay);
 }
 
-void Simulator::updateDynamicGraphic(File* f)
+void Simulator::updateDynamicGraphic(File** f)
 {
     this->dynamicOverlay->graphics()->clear();
-    QList<Pedestrian*>::const_iterator it = f->getFrameData().pedestrians.begin();
-    QList<Vehicle*>::const_iterator kt = f->getFrameData().vehicles.begin();
-    for(;it!=f->getFrameData().pedestrians.end();++it){
-        this->dynamicOverlay->graphics()->append((*it)->getGraphicPoint());
+    for(int i = 0; i < FILE_NUM; i++){
+        if(f[i]->getActive()){
+            QList<Pedestrian*>::const_iterator it = f[i]->getFrameData().pedestrians.begin();
+            QList<Vehicle*>::const_iterator kt = f[i]->getFrameData().vehicles.begin();
+            for(;it!=f[i]->getFrameData().pedestrians.end();++it){
+                this->dynamicOverlay->graphics()->append((*it)->getGraphicPoint());
+            }
+
+            for(;kt!=f[i]->getFrameData().vehicles.end();++kt){
+                this->dynamicOverlay->graphics()->append((*kt)->getGraphicPoint());
+            }
+        }
     }
 
-    for(;kt!=f->getFrameData().vehicles.end();++kt){
-        this->dynamicOverlay->graphics()->append((*kt)->getGraphicPoint());
-    }
 
-    emit graphicUpdated(f->getId());
+    emit graphicUpdated();
 
 }
 

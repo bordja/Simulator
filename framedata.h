@@ -19,6 +19,7 @@ public:
     void setPedestrianNum(quint16 numPedestrian);
     void setVehicleNum(quint16 numVehicle);
     void incrementCurrentFrame();
+    void setCurrentFrameToZero();
     void setNumberOfFrames(quint16);
     quint16 getCurrentFrameNum();
     quint16 getNumberOfFrames();
@@ -30,6 +31,8 @@ public:
 
     QList <Vehicle*> vehicles;
     QList <Pedestrian*> pedestrians;
+    quint64 getTimestamp() const;
+
 private:
     quint64 timestamp;
     quint16 numPedestrian;

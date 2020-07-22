@@ -2,52 +2,56 @@
 #include <QDebug>
 #include <QDataStream>
 #include <QThread>
+
+#define FPS_60 16.66666F
+
+quint64 currentTimestamp;
 Collector::Collector(Simulator& simulator)
 {
-    this->files[0].setFileDescriptor(new QFile("E:/Qt/workspace/Simulator/data/out_perspective_dets_v3/perspective_out_1"));
-    if (this->files[0].openFile()) {
-        qDebug()<<"Opened "<<this->files[0].getFileDescriptor()->fileName()<<"FILE ID: "<<this->files[0].getId();
-        this->files[0].getFrameData().setNumberOfFrames((this->files[0].getFileDescriptor()->size() - HEADER_SIZE)/FRAME_SIZE);
-    }
-    connect(&files[0],&File::dataReady,&simulator, &Simulator::updateDynamicGraphic);
-    connect(&simulator,&Simulator::graphicUpdated,this, &Collector::readDataFromFile);
+    this->files[0] = new File();
+    this->files[1] = new File();
+    this->files[2] = new File();
+    this->files[3] = new File();
 
-    this->files[1].setFileDescriptor(new QFile("E:/Qt/workspace/Simulator/data/out_perspective_dets_v3/perspective_out_2"));
-    if (this->files[1].openFile()) {
-        qDebug()<<"Opened "<<this->files[1].getFileDescriptor()->fileName()<<"FILE ID: "<<this->files[1].getId();
-        this->files[1].getFrameData().setNumberOfFrames((this->files[1].getFileDescriptor()->size() - HEADER_SIZE)/FRAME_SIZE);
+    this->files[0]->setFileDescriptor(new QFile("E:/Qt/workspace/Simulator/data/out_perspective_dets_v5/out_perspective_1"));
+    if (this->files[0]->openFile()) {
+        qDebug()<<"Opened "<<this->files[0]->getFileDescriptor()->fileName()<<"FILE ID: "<<this->files[0]->getId();
+        this->files[0]->getFrameData().setNumberOfFrames((this->files[0]->getFileDescriptor()->size() - HEADER_SIZE)/FRAME_SIZE);
     }
-    connect(&files[1],&File::dataReady,&simulator, &Simulator::updateDynamicGraphic);
 
-    this->files[2].setFileDescriptor(new QFile("E:/Qt/workspace/Simulator/data/out_perspective_dets_v3/perspective_out_3"));
-    if (this->files[2].openFile()) {
-        qDebug()<<"Opened "<<this->files[2].getFileDescriptor()->fileName()<<"FILE ID: "<<this->files[2].getId();
-        this->files[2].getFrameData().setNumberOfFrames((this->files[2].getFileDescriptor()->size() - HEADER_SIZE)/FRAME_SIZE);
+    this->files[1]->setFileDescriptor(new QFile("E:/Qt/workspace/Simulator/data/out_perspective_dets_v5/out_perspective_2"));
+    if (this->files[1]->openFile()) {
+        qDebug()<<"Opened "<<this->files[1]->getFileDescriptor()->fileName()<<"FILE ID: "<<this->files[1]->getId();
+        this->files[1]->getFrameData().setNumberOfFrames((this->files[1]->getFileDescriptor()->size() - HEADER_SIZE)/FRAME_SIZE);
     }
-    connect(&files[2],&File::dataReady,&simulator, &Simulator::updateDynamicGraphic);
 
-    this->files[3].setFileDescriptor(new QFile("E:/Qt/workspace/Simulator/data/out_perspective_dets_v3/perspective_out_4"));
-    if (this->files[3].openFile()) {
-        qDebug()<<"Opened "<<this->files[3].getFileDescriptor()->fileName()<<"FILE ID: "<<this->files[3].getId();
-        this->files[3].getFrameData().setNumberOfFrames((this->files[3].getFileDescriptor()->size() - HEADER_SIZE)/FRAME_SIZE);
+    this->files[2]->setFileDescriptor(new QFile("E:/Qt/workspace/Simulator/data/out_perspective_dets_v5/out_perspective_3"));
+    if (this->files[2]->openFile()) {
+        qDebug()<<"Opened "<<this->files[2]->getFileDescriptor()->fileName()<<"FILE ID: "<<this->files[2]->getId();
+        this->files[2]->getFrameData().setNumberOfFrames((this->files[2]->getFileDescriptor()->size() - HEADER_SIZE)/FRAME_SIZE);
     }
-    connect(&files[3],&File::dataReady,&simulator, &Simulator::updateDynamicGraphic);
+
+    this->files[3]->setFileDescriptor(new QFile("E:/Qt/workspace/Simulator/data/out_perspective_dets_v5/out_perspective_4"));
+    if (this->files[3]->openFile()) {
+        qDebug()<<"Opened "<<this->files[3]->getFileDescriptor()->fileName()<<"FILE ID: "<<this->files[3]->getId();
+        this->files[3]->getFrameData().setNumberOfFrames((this->files[3]->getFileDescriptor()->size() - HEADER_SIZE)/FRAME_SIZE);
+    }
+
+    connect(&simulator,&Simulator::graphicUpdated,this, &Collector::readFiles);
+    connect(this, &Collector::dataReady,&simulator,&Simulator::updateDynamicGraphic);
 }
 
 void Collector::readDataFromFile(int fileID){
-    QThread::msleep(100);
+    QThread::msleep(70);
     quint64 timestamp;
     quint16 numPedestrian;
     quint16 numVehicle;
     quint16 pedestrianRel[2 * MAX_PEDESTRIAN];
     quint16 vehicleRel[2 * MAX_VEHICLE];
 
-//    quint16 tmp_x;
-//    quint16 tmp_y;
-//    int k = 0;
-    this->files[fileID].getFileDescriptor()->seek(HEADER_SIZE + FRAME_SIZE * files[fileID].getFrameData().getCurrentFrameNum());
+    this->files[fileID]->getFileDescriptor()->seek(HEADER_SIZE + FRAME_SIZE * files[fileID]->getFrameData().getCurrentFrameNum());
 
-    QDataStream dataCollector(this->files[fileID].getFileDescriptor());
+    QDataStream dataCollector(this->files[fileID]->getFileDescriptor());
 
     dataCollector.setByteOrder(QDataStream::LittleEndian);
 
@@ -55,46 +59,26 @@ void Collector::readDataFromFile(int fileID){
     dataCollector>>numPedestrian;
 
     for(int i = 0; i < MAX_PEDESTRIAN; i++){
-//        dataCollector>>tmp_x;
-//        dataCollector>>tmp_y;
-//        if(tmp_x < 1920 && tmp_y < 1080){
-//            pedestrianRel[k*2] = tmp_x;
-//            pedestrianRel[k*2+1] = tmp_y;
-//            k++;
-//        }
-//        else{
-//            numPedestrian--;
-//        }
+
         dataCollector>>pedestrianRel[i*2];
         dataCollector>>pedestrianRel[i*2+1];
     }
 
     dataCollector>>numVehicle;
 
-//    k = 0;
     for(int i = 0; i < MAX_VEHICLE; i++){
-//        dataCollector>>tmp_x;
-//        dataCollector>>tmp_y;
-//        if(tmp_x < 1920 && tmp_y < 1080){
-//            vehicleRel[k*2] = tmp_x;
-//            vehicleRel[k*2+1] = tmp_y;
-//            k++;
-//        }
-//        else{
-//            numVehicle--;
-//        }
+
         dataCollector>>vehicleRel[i*2];
         dataCollector>>vehicleRel[i*2+1];
     }
 
-    files[fileID].getFrameData().setTimestamp(timestamp);
-    files[fileID].getFrameData().setPedestrianNum(numPedestrian);
-    files[fileID].getFrameData().setVehicleNum(numVehicle);
-    //files[fileID].getFrameData().printFrameData();
+    files[fileID]->getFrameData().setTimestamp(timestamp);
+    files[fileID]->getFrameData().setPedestrianNum(numPedestrian);
+    files[fileID]->getFrameData().setVehicleNum(numVehicle);
 
-    if(files[fileID].getFrameData().getCurrentFrameNum() != files[fileID].getFrameData().getNumberOfFrames()){
-        files[fileID].getFrameData().incrementCurrentFrame();
-        files[fileID].calculateCoordinates(pedestrianRel,numPedestrian,vehicleRel,numVehicle);
+    if(files[fileID]->getFrameData().getCurrentFrameNum() != files[fileID]->getFrameData().getNumberOfFrames()){
+        files[fileID]->getFrameData().incrementCurrentFrame();
+        files[fileID]->calculateCoordinates(pedestrianRel,numPedestrian,vehicleRel,numVehicle);
     }
     else{
         emit finished();
@@ -102,7 +86,7 @@ void Collector::readDataFromFile(int fileID){
 }
 
 void Collector::readFileHeader(int fileID){
-    QDataStream dataCollector(this->files[fileID].getFileDescriptor());
+    QDataStream dataCollector(this->files[fileID]->getFileDescriptor());
     dataCollector.setByteOrder(QDataStream::LittleEndian);
 
     quint8 cam_ID;
@@ -133,24 +117,104 @@ void Collector::readFileHeader(int fileID){
     dataCollector>>pole4_rel_x;
     dataCollector>>pole4_rel_y;
 
-    files[fileID].getHeader().setCam_ID(cam_ID);
-    files[fileID].getHeader().calculateParameters(pole3_ID,pole4_ID,pole1_ID,pole3_rel_x,pole3_rel_y,pole4_rel_x,pole4_rel_y,pole1_rel_x,pole1_rel_y);
-    files[fileID].getHeader().printHeader();
+    files[fileID]->getHeader().setCam_ID(cam_ID);
+    files[fileID]->getHeader().calculateParameters(pole3_ID,pole4_ID,pole1_ID,pole3_rel_x,pole3_rel_y,pole4_rel_x,pole4_rel_y,pole1_rel_x,pole1_rel_y);
+    files[fileID]->getHeader().printHeader();
 }
 
 File* Collector::getFile(int id)
 {
-    return &(this->files[id]);
+    return (this->files[id]);
 }
 
 void Collector::start()
 {
-    this->readFileHeader(3);
-    this->readDataFromFile(3);
+    for(int i = 0; i < FILE_NUM; i++){
+        this->files[i]->setActive(false);
+        this->readFileHeader(i);
+    }
+    initTimestamps();
+    readFiles();
 }
 
+void Collector::initTimestamps(){
+
+    quint64 timestamps [FILE_NUM];
+    quint64 minTimestamp;
+    for(int i = 0; i < FILE_NUM; i++){
+        readDataFromFile(i);
+        timestamps[i] = this->files[i]->getFrameData().getTimestamp();
+        this->files[i]->getFrameData().setCurrentFrameToZero(); //readDataFromFile is incrementing current frame; needs to be set to 0
+    }
+    minTimestamp = timestamps[0];
+    for(int i = 1; i < FILE_NUM; i++){
+        if(minTimestamp > timestamps[i]){
+            minTimestamp = timestamps[i];
+        }
+    }
+    currentTimestamp = minTimestamp;
+    updateActiveFiles();
+}
+
+void Collector::readFiles()
+{
+    updateCurrentTime();
+    updateActiveFiles();
+
+    for(int i = 0; i < FILE_NUM; i++){
+        if(this->files[i]->getActive()){
+            readDataFromFile(i);
+        }
+    }
+
+    //printActive();
+    emit dataReady(this->files);
+
+}
+
+void Collector::updateActiveFiles()
+{
+    for(int i = 0; i < FILE_NUM; i++){
+        if(this->files[i]->getFrameData().getTimestamp() - currentTimestamp < FPS_60){
+            this->files[i]->setActive(true);
+        }
+    }
+}
+
+void Collector::updateCurrentTime()
+{
+    quint64 timestamps [FILE_NUM];
+    int k = 0;
+    quint64 minTimestamp;
+    for(int i = 0; i < FILE_NUM; i++){
+        timestamps[i] = 0;
+        if(this->files[i]->getActive()){
+            this->files[i]->getFileDescriptor()->seek(HEADER_SIZE + FRAME_SIZE * files[i]->getFrameData().getCurrentFrameNum());
+            QDataStream dataCollector(this->files[i]->getFileDescriptor());
+            dataCollector.setByteOrder(QDataStream::LittleEndian);
+            dataCollector>>timestamps[k];
+            k++;
+        }
+    }
+    minTimestamp = timestamps[0];
+    for(int i = 1; i < k; i++){
+        if(minTimestamp > timestamps[i]){
+            minTimestamp = timestamps[i];
+        }
+    }
+    currentTimestamp = minTimestamp;
+}
+
+void Collector::printActive()
+{
+    bool activeFiles[FILE_NUM];
+    for(int i = 0; i < FILE_NUM; i++){
+        activeFiles[i] = this->files[i]->getActive();
+    }
+    qDebug()<<"[ "<<activeFiles[0]<<", "<<activeFiles[1]<<", "<<activeFiles[2]<<", "<<activeFiles[3]<<", "<<" ]";
+}
 Collector::~Collector(){
     for(int i = 0 ;i < FILE_NUM;i++){
-        this->files[i].getFileDescriptor()->close();
+        this->files[i]->getFileDescriptor()->close();
     }
 }

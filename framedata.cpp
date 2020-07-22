@@ -46,8 +46,18 @@ void FrameData::appendPedestrian(Pedestrian *p)
     this->pedestrians.append(p);
 }
 
+quint64 FrameData::getTimestamp() const
+{
+    return timestamp;
+}
+
 void FrameData::incrementCurrentFrame(){
     this->currentFrame++;
+}
+
+void FrameData::setCurrentFrameToZero()
+{
+    this->currentFrame = 0;
 }
 
 quint16 FrameData::getCurrentFrameNum(){

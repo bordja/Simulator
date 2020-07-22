@@ -35,10 +35,9 @@ public:
     ~Simulator() override;
     void updateStaticGraphic();
 public slots:
-    void updateDynamicGraphic(File* f);
+    void updateDynamicGraphic(File** f);
 signals:
-    void graphicUpdated(int id);
-    void appStarting();
+    void graphicUpdated();
 private:
     Esri::ArcGISRuntime::Map*                   m_map = nullptr;
     Esri::ArcGISRuntime::MapGraphicsView*       m_mapView = nullptr;
