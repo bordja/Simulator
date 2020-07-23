@@ -26,8 +26,10 @@ private:
 signals:
     void finished();
     void dataReady(File** f);
+    void fileEnd();
 public slots:
     void readFiles();
+    void checkSimulationFinished();
 };
 
 #endif // COLLECTOR_H

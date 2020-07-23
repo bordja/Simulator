@@ -39,10 +39,11 @@ Collector::Collector(Simulator& simulator)
 
     connect(&simulator,&Simulator::graphicUpdated,this, &Collector::readFiles);
     connect(this, &Collector::dataReady,&simulator,&Simulator::updateDynamicGraphic);
+    connect(this, &Collector::fileEnd, this, &Collector::checkSimulationFinished);
 }
 
 void Collector::readDataFromFile(int fileID){
-    QThread::msleep(70);
+    QThread::msleep(30);
     quint64 timestamp;
     quint16 numPedestrian;
     quint16 numVehicle;
@@ -81,7 +82,8 @@ void Collector::readDataFromFile(int fileID){
         files[fileID]->calculateCoordinates(pedestrianRel,numPedestrian,vehicleRel,numVehicle);
     }
     else{
-        emit finished();
+        files[fileID]->setActive(false);
+        emit fileEnd();
     }
 }
 
@@ -172,10 +174,23 @@ void Collector::readFiles()
 
 }
 
+void Collector::checkSimulationFinished()
+{
+    bool simulationEnd = true;
+    for(int i = 0; i < FILE_NUM; i++){
+        if(this->files[i]->getActive()){
+            simulationEnd = false;
+        }
+    }
+    if(simulationEnd){
+        emit finished();
+    }
+}
+
 void Collector::updateActiveFiles()
 {
     for(int i = 0; i < FILE_NUM; i++){
-        if(this->files[i]->getFrameData().getTimestamp() - currentTimestamp < FPS_60){
+        if((qint64)(this->files[i]->getFrameData().getTimestamp() - currentTimestamp) < FPS_60){
             this->files[i]->setActive(true);
         }
     }
@@ -213,6 +228,7 @@ void Collector::printActive()
     }
     qDebug()<<"[ "<<activeFiles[0]<<", "<<activeFiles[1]<<", "<<activeFiles[2]<<", "<<activeFiles[3]<<", "<<" ]";
 }
+
 Collector::~Collector(){
     for(int i = 0 ;i < FILE_NUM;i++){
         this->files[i]->getFileDescriptor()->close();
