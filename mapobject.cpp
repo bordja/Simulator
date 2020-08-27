@@ -21,3 +21,33 @@ Graphic* MapObject::getGraphicPoint()
 {
     return this->graphicPoint;
 }
+
+bool MapObject::getInReferenceRegion() const
+{
+    return inReferenceRegion;
+}
+
+void MapObject::setInReferenceRegion(bool value)
+{
+    inReferenceRegion = value;
+}
+
+unsigned int MapObject::getXPixPosition() const
+{
+    return xPixPosition;
+}
+
+void MapObject::setXPixPosition(unsigned int value)
+{
+    xPixPosition = value;
+}
+
+unsigned int MapObject::getYPixPosition() const
+{
+    return yPixPosition;
+}
+
+void MapObject::setYPixPosition(unsigned int value)
+{
+    yPixPosition = value;
+}

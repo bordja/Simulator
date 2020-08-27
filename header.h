@@ -41,10 +41,18 @@ public:
 
     Point getPoleFromId(int id);
 
+    quint16 getBx() const;
+    void setBx(const quint16 &value);
+
+    quint16 getBy() const;
+    void setBy(const quint16 &value);
+
 private:
     quint8 cam_ID;
     quint16 Ox;
     quint16 Oy;
+    quint16 Bx;
+    quint16 By;
     double Ox_abs;
     double Oy_abs;
     double px_x;

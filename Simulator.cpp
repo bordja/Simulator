@@ -57,27 +57,23 @@ void Simulator::updateStaticGraphic(){
     for(;it!=poles.end();++it){
         this->staticOverlay->graphics()->append((*it)->getGraphicPoint());
     }
-    //m_mapView->graphicsOverlays()->append(staticOverlay);
 }
 
-void Simulator::updateDynamicGraphic(File** f)
+void Simulator::updateDynamicGraphic(QList<Pedestrian*>* pedestrians, QList<Vehicle*>* vehicles)
 {
     this->dynamicOverlay->graphics()->clear();
-    for(int i = 0; i < FILE_NUM; i++){
-        if(f[i]->getActive()){
-            QList<Pedestrian*>::const_iterator it = f[i]->getFrameData().pedestrians.begin();
-            QList<Vehicle*>::const_iterator kt = f[i]->getFrameData().vehicles.begin();
-            for(;it!=f[i]->getFrameData().pedestrians.end();++it){
-                this->dynamicOverlay->graphics()->append((*it)->getGraphicPoint());
-            }
 
-            for(;kt!=f[i]->getFrameData().vehicles.end();++kt){
-                this->dynamicOverlay->graphics()->append((*kt)->getGraphicPoint());
-            }
-        }
+    QList<Pedestrian*>::const_iterator it = pedestrians->begin();
+    QList<Vehicle*>::const_iterator kt = vehicles->begin();
+    for(;it!=pedestrians->end();++it){
+        this->dynamicOverlay->graphics()->append((*it)->getGraphicPoint());
     }
 
-
+    for(;kt!=vehicles->end();++kt){
+        this->dynamicOverlay->graphics()->append((*kt)->getGraphicPoint());
+    }
+    pedestrians->clear();
+    vehicles->clear();
     emit graphicUpdated();
 
 }

@@ -40,11 +40,11 @@ void File::calculateCoordinates(quint16 *pedestrianCoors, int pedestrianNum, qui
     double xAbs_temp;
     double yAbs_temp;
 
-    if(!(this->getFrameData().pedestrians.isEmpty())){
-        this->getFrameData().pedestrians.clear();
+    if(!(this->getFrameData().pedestrians->isEmpty())){
+        this->getFrameData().pedestrians->clear();
     }
-    if(!(this->getFrameData().vehicles.isEmpty())){
-        this->getFrameData().vehicles.clear();
+    if(!(this->getFrameData().vehicles->isEmpty())){
+        this->getFrameData().vehicles->clear();
     }
 
     for(int i = 0; i < pedestrianNum; i++){
@@ -59,6 +59,9 @@ void File::calculateCoordinates(quint16 *pedestrianCoors, int pedestrianNum, qui
         xAbs_temp+=((delta_x * this->getHeader().getPx_x()) + (delta_y * this->getHeader().getPy_x()));
         yAbs_temp+=((delta_x * this->getHeader().getPx_y()) + (delta_y * this->getHeader().getPy_y()));
         Pedestrian* p = new Pedestrian(xAbs_temp,yAbs_temp,i);
+        p->setXPixPosition(x_temp);
+        p->setYPixPosition(y_temp);
+        setPedestrianInRef(p);
         this->getFrameData().appendPedestrian(p);
     }
 
@@ -74,6 +77,9 @@ void File::calculateCoordinates(quint16 *pedestrianCoors, int pedestrianNum, qui
         xAbs_temp+=((delta_x * this->getHeader().getPx_x()) + (delta_y * this->getHeader().getPy_x()));
         yAbs_temp+=((delta_x * this->getHeader().getPx_y()) + (delta_y * this->getHeader().getPy_y()));
         Vehicle* v = new Vehicle(xAbs_temp,yAbs_temp,i);
+        v->setXPixPosition(x_temp);
+        v->setYPixPosition(y_temp);
+        setVehicleInRef(v);
         this->getFrameData().appendVehicle(v);
     }
 }
@@ -86,4 +92,22 @@ bool File::getActive() const
 void File::setActive(bool value)
 {
     active = value;
+}
+
+void File::setPedestrianInRef(Pedestrian *p)
+{
+    if((p->getYPixPosition() > this->getHeader().getOy()) && (p->getYPixPosition() < this->getHeader().getBy())){
+        p->setInReferenceRegion(true);
+    }else{
+        p->setInReferenceRegion(false);
+    }
+}
+
+void File::setVehicleInRef(Vehicle *v)
+{
+    if((v->getYPixPosition() > this->getHeader().getOy()) && (v->getYPixPosition() < this->getHeader().getBy())){
+        v->setInReferenceRegion(true);
+    }else{
+        v->setInReferenceRegion(false);
+    }
 }

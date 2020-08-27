@@ -35,7 +35,7 @@ public:
     ~Simulator() override;
     void updateStaticGraphic();
 public slots:
-    void updateDynamicGraphic(File** f);
+    void updateDynamicGraphic(QList<Pedestrian*>*, QList<Vehicle*>*);
 signals:
     void graphicUpdated();
 private:

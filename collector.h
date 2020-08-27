@@ -21,11 +21,19 @@ public:
     void updateActiveFiles();
     void updateCurrentTime();
     void printActive();
+    void mergeDoublesAlg(int,int);
+    double euclidDistanceP(Pedestrian* p1,Pedestrian* p2);
+    double euclidDistanceV(Vehicle* v1, Vehicle* v2);
+    Pedestrian* mindegyP(Pedestrian* p1,Pedestrian* p2);
+    Vehicle* mindegyV(Vehicle* v1, Vehicle* v2);
+    QList<Pedestrian*>* finalPedestrians;
+    QList<Vehicle*>* finalVehicles;
+
 private:
     File* files[FILE_NUM];
 signals:
     void finished();
-    void dataReady(File** f);
+    void dataReady(QList<Pedestrian*>*, QList<Vehicle*>*);
     void fileEnd();
 public slots:
     void readFiles();

@@ -25,6 +25,8 @@ void Header::calculateParameters(quint32 pole0_ID, quint32 poleDx_ID, quint32 po
 
     quint16 Bx = poleDy_rel_x;
     quint16 By = 1080 - poleDy_rel_y;
+    this->setBx(Bx);
+    this->setBy(By);
     double Bx_abs = this->getPoleFromId(poleDy_ID).x();
     double By_abs = this->getPoleFromId(poleDy_ID).y();
 
@@ -148,4 +150,24 @@ Point Header::getPoleFromId(int id)
             return (*it)->getLocation();
         }
     }
+}
+
+quint16 Header::getBx() const
+{
+    return Bx;
+}
+
+void Header::setBx(const quint16 &value)
+{
+    Bx = value;
+}
+
+quint16 Header::getBy() const
+{
+    return By;
+}
+
+void Header::setBy(const quint16 &value)
+{
+    By = value;
 }

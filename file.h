@@ -19,7 +19,8 @@ public:
     void calculateCoordinates(quint16* pedestrianCoors, int pedestrianNum, quint16* vehicleCoords, int vehicleNum);
     bool getActive() const;
     void setActive(bool value);
-
+    void setPedestrianInRef(Pedestrian* p);
+    void setVehicleInRef(Vehicle* v);
 private:
     QFile* fileDescriptor;
     Header header;

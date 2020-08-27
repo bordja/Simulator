@@ -29,8 +29,8 @@ public:
     void appendVehicle(Vehicle* v);
     void appendPedestrian(Pedestrian* p);
 
-    QList <Vehicle*> vehicles;
-    QList <Pedestrian*> pedestrians;
+    QList <Vehicle*>* vehicles;
+    QList <Pedestrian*>* pedestrians;
     quint64 getTimestamp() const;
 
 private:

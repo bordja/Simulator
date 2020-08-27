@@ -4,6 +4,8 @@
 FrameData::FrameData()
 {
     this->currentFrame = 0;
+    pedestrians = new QList<Pedestrian*>;
+    vehicles = new QList<Vehicle*>;
 }
 
 void FrameData::setTimestamp(quint64 timestamp){
@@ -38,12 +40,12 @@ quint16 FrameData::getNumVehicle() const
 
 void FrameData::appendVehicle(Vehicle* v)
 {
-    this->vehicles.append(v);
+    this->vehicles->append(v);
 }
 
 void FrameData::appendPedestrian(Pedestrian *p)
 {
-    this->pedestrians.append(p);
+    this->pedestrians->append(p);
 }
 
 quint64 FrameData::getTimestamp() const
